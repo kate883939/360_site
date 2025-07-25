@@ -1,0 +1,4544 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nani學習360</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background: #f8f8f8;
+    }
+    .header {
+      background: #087144;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0px 200px;
+      height: 64px;
+      position: relative;
+      border-bottom: 0px solid #eee;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .logo span {
+      color: #fff;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+    .logo .brand {
+      color: #fff;
+      font-weight: 400;
+      font-size: 1.2rem;
+      margin-left: 2px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-item {
+      font-size: 20px;
+      font-weight: 500;
+      color: #C1EDDC;
+      position: relative;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-item.active {
+      font-weight: 700;
+    }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) rotate(180deg);
+      bottom: -18px;
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 18px solid #eaf8ec;
+      z-index: 2;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .search-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .search-icon svg {
+      fill: #fff;
+      width: 22px;
+      height: 22px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-right: 8px;
+    }
+    .user-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #fff;
+    }
+    @media (max-width: 800px) {
+      .nav {
+        gap: 24px;
+      }
+      .header {
+        padding: 0 12px;
+      }
+    }
+
+    /* 線上觀課頁面樣式 */
+    .online-observation-content {
+      max-width: 1200px;
+      margin: 40px auto 0 auto;
+      padding: 40px 48px;
+      display: none;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px #009e5b14;
+    }
+
+    /* 分析頁面樣式 */
+    .analysis-content {
+      max-width: 1200px;
+      margin: 40px auto 0 auto;
+      padding: 40px 48px;
+      display: none;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px #009e5b14;
+    }
+
+    /* 知識點分析頁面樣式 */
+    .knowledge-point-filter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .filter-indicator {
+      width: 16px;
+      height: 16px;
+      background: #FFB73D;
+      border-radius: 2px;
+    }
+
+    .filter-label {
+      font-size: 20px;
+      font-weight: 700;
+      color: #212B36;
+    }
+
+    .filter-select-wrapper {
+      position: relative;
+    }
+
+    .knowledge-point-select {
+      width: 320px;
+      height: 56px;
+      padding: 0 16px;
+      border: 2px solid rgba(145, 158, 171, 0.32);
+      border-radius: 8px;
+      font-size: 18px;
+      color: #212B36;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .overview-section {
+      margin-top: 32px;
+    }
+
+    .overview-cards {
+      display: flex;
+      gap: 32px;
+      align-items: stretch;
+      padding: 24px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #DFE3E8;
+    }
+
+    .learning-status-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-header h3 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #637381;
+      text-align: center;
+      margin: 0;
+    }
+
+    .status-content {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pie-chart-container {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pie-chart {
+      flex-shrink: 0;
+    }
+
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      color: #637381;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-color.proficient {
+      background: #00A15D;
+    }
+
+    .legend-color.practicing {
+      background: #FFB73D;
+    }
+
+    .legend-color.not-practiced {
+      background: #637381;
+    }
+
+    .divider {
+      width: 1px;
+      background: rgba(145, 158, 171, 0.24);
+      align-self: stretch;
+    }
+
+    .stats-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      height: 144px;
+    }
+
+    .stats-icon {
+      flex-shrink: 0;
+    }
+
+    .stats-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #637381;
+      text-align: center;
+    }
+
+    .stats-value {
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .stats-card:nth-child(3) .stats-value {
+      color: #409EFF;
+    }
+
+    .stats-card:nth-child(4) .stats-value {
+      color: #C3AF00;
+    }
+
+    .stats-card:nth-child(5) .stats-value {
+      color: #B7731E;
+    }
+
+    .proficiency-section {
+      margin-top: 24px;
+      gap: 24px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #212B36;
+      margin-bottom: 24px;
+    }
+
+    .proficiency-level {
+      margin-bottom: 24px;
+      background: #fff;
+      border-radius: 12px;
+      border: 0px solid #DFE3E8;
+      overflow: hidden;
+    }
+
+    .proficiency-level:last-child {
+      margin-bottom: 0;
+    }
+
+    .level-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 48px;
+      background: #EAF9E8;
+      border-radius: 12px;
+    }
+
+    .level-icon {
+      flex-shrink: 0;
+    }
+
+    .level-header h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #212B36;
+      margin: 0;
+    }
+
+    .level-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212B36;
+      margin: 0;
+      padding: 16px 48px;
+      border-radius: 12px;
+    }
+
+        .master-container,
+    .no-test-container {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #DFE3E8;
+      overflow: hidden;
+      margin-bottom: 24px;
+      padding: 24px;
+    }
+
+    .proficiency-levels-container {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #DFE3E8;
+      overflow: hidden;
+      margin-bottom: 24px;
+      padding: 24px;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .proficiency-levels-container .practice-header {
+      margin-bottom: 24px;
+      padding-left: 0;
+    }
+
+    .proficiency-levels-container .practice-header h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212B36;
+      margin: 0;
+    }
+
+    .proficiency-level.practicing .level-title {
+      background: #FFDCC5;
+    }
+
+    .proficiency-level.familiar .level-title {
+      background: #FFEDE1;
+    }
+
+    .proficiency-level.basic .level-title {
+      background: #FFFAF6;
+    }
+
+    .proficiency-level.no-test .level-title {
+      background: #DFE3E8;
+    }
+
+    .level-content {
+      padding: 20px 48px;
+    }
+
+    .level-description {
+      font-size: 16px;
+      color: #637381;
+      margin-bottom: 20px;
+    }
+
+    .question-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      min-height: 308px;
+    }
+
+    .question-navigation {
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      width: 48px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s, opacity 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: rgba(145, 158, 171, 0.1);
+    }
+
+    .nav-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .question-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-header {
+      display: flex;
+      gap: 12px;
+    }
+
+    .question-type {
+      background: #1890FF;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .question-text {
+      font-size: 20px;
+      font-weight: 700;
+      color: #212B36;
+      line-height: 1.5;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .question-image {
+      width: 400px;
+      height: 162px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #637381;
+      margin-bottom: 16px;
+    }
+
+    .question-options {
+      font-size: 20px;
+      color: #212B36;
+      font-weight: 500;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .students-section {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .student-name-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px;
+      border: 1px solid #00A15D;
+      border-radius: 8px;
+      background: #fff;
+      min-width: 216px;
+      max-width: 216px;
+    }
+
+    .student-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 10px;
+      border: 1px solid #00A15D;
+      border-radius: 8px;
+      background: #fff;
+      min-width: 216px;
+    }
+
+    .student-avatar {
+      flex-shrink: 0;
+    }
+
+    .student-avatar img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .student-info {
+      flex: 1;
+    }
+
+    .student-name {
+      font-size: 20px;
+      font-weight: 500;
+      color: #212B36;
+    }
+
+    /* Third Header 樣式 */
+    .third-header {
+      background: #F9FAFB;
+      border-bottom: 1px solid rgba(145, 158, 171, 0.24);
+      padding: 8px 0;
+      display: none;
+    }
+
+    .third-header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 200px;
+    }
+
+    .filter-selects {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .filter-select {
+      position: relative;
+      display: inline-block;
+    }
+
+    .filter-select select {
+      width: 128px;
+      height: 40px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: 400;
+      color: #212B36;
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    .filter-select select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 161, 93, 0.2);
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .select-arrow img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 800px) {
+      .third-header-content {
+        padding: 0 12px;
+      }
+      
+      .filter-selects {
+        gap: 20px;
+      }
+      
+      .filter-select select {
+        width: 100px;
+        font-size: 16px;
+      }
+    }
+
+    .page-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #212B36;
+      margin-right: 32px;
+      margin-bottom: 0; /* 移除底部間距 */
+      line-height: 1.2; /* 添加行高控制 */
+    }
+
+    .page-filters {
+      display: flex;
+      gap: 16px;
+    }
+
+    .page-filters .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-filters label {
+      font-size: 14px;
+      color: #637381;
+      margin-bottom: 2px;
+    }
+
+    .page-filters .filter-select {
+      min-width: 120px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    .dashboard-content {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+      /* 移除 min-height，讓高度自適應內容 */
+    }
+
+    /* 左側狀態卡片區域 */
+    .status-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+      min-width: 322px;
+      flex: 0 0 auto;
+    }
+
+    .status-card {
+      background: #f6fef9;
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 140px;
+      height: 112px;
+      box-shadow: 0 2px 8px #009e5b0a;
+      flex-direction: row; /* 確保是水平排列 */
+    }
+
+    .status-card .card-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0; /* 防止圖標被壓縮 */
+    }
+
+    .status-card .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1; /* 讓內容區域佔用剩餘空間 */
+    }
+
+    /* 需要協助卡片跨越整個寬度 */
+    .status-card.needs-help {
+      grid-column: 1 / -1;
+      justify-self: stretch;
+      width: 602px;
+      max-width: 602px;
+      background: rgba(255, 72, 66, 0.08);
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      flex-direction: column; /* 改為垂直排列 */
+    }
+
+    .status-card.needs-help .card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px; /* 上下區塊間隔 */
+      width: auto;
+    }
+
+    .status-card.needs-help .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px; /* 圖標和文字間隔 */
+      justify-content: center; /* 讓圖標和文字置中 */
+    }
+
+    .status-card.needs-help .card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0; /* 防止圖標被壓縮 */
+    }
+
+    .status-card.needs-help .card-label {
+      color: #637381; /* 中灰色文字 */
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .status-card.needs-help .card-value {
+      color: #212B36; /* 深灰色數字 */
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .status-card {
+      background: #f6fef9;
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 140px;
+      height: 112px; /* 固定高度為 112px */
+      box-shadow: 0 2px 8px #009e5b0a;
+      flex-direction: row;
+    }
+
+    /* 學生總數卡片樣式 */
+    .status-card.total-students {
+      background: rgba(0, 161, 93, 0.08);
+      border: 1px solid rgba(0, 161, 93, 0.2);
+    }
+
+    .status-card.total-students .card-value {
+      color: #009e5b;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .status-card.total-students .card-label {
+      font-size: 16px;
+    }
+
+    /* 作答中卡片樣式 */
+    .status-card.answering {
+      background: rgba(0, 161, 93, 0.08);
+      border: 1px solid rgba(0, 161, 93, 0.2);
+    }
+
+    .status-card.answering .card-value {
+      color: #009e5b;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .status-card.answering .card-label {
+      font-size: 16px;
+    }
+
+    /* 閒置中卡片樣式 */
+    .status-card.idle {
+      background: rgba(255, 197, 84, 0.08);
+      border: 1px solid rgba(255, 197, 84, 0.2);
+    }
+
+    .status-card.idle .card-value {
+      color: #e3ce00;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .status-card.idle .card-label {
+      font-size: 16px;
+    }
+
+    .status-card .card-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .status-card .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* 統一四個卡片的人數字體大小 */
+    .status-card .card-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212B36;
+      margin-bottom: 2px;
+    }
+
+    .status-card .card-label {
+      font-size: 14px;
+      color: #637381;
+    }
+
+    .status-card.answering {
+      background: #eaf8ec;
+    }
+    .status-card.idle {
+      background: #fffbe6;
+    }
+    .status-card.needs-help .card-label,
+    .status-card.needs-help .card-value {
+      color: #f44336;
+    }
+
+    /* 右側績效卡片區域 */
+    .performance-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 320px;
+      flex: 1;
+      /* 移除 max-height 限制 */
+    }
+
+    .performance-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px #009e5b0a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* 讓內容分散對齊 */
+      min-height: 60px;
+      border: 1.5px solid #eaf8ec;
+    }
+
+    .performance-card.accuracy {
+      background: #f6fef9;
+      border: 1.5px solid #b6e9d0;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .performance-card.accuracy.accuracy-high {
+      background: rgba(0, 161, 93, 0.08);
+      border: 1.5px solid rgba(0, 161, 93, 0.2);
+    }
+
+    .performance-card.accuracy.accuracy-medium {
+      background: rgba(227, 206, 0, 0.08);
+      border: 1.5px solid rgba(227, 206, 0, 0.2);
+    }
+
+    .performance-card.accuracy.accuracy-low {
+      background: rgba(255, 72, 66, 0.08);
+      border: 1.5px solid rgba(255, 72, 66, 0.2);
+    }
+
+    .performance-card.accuracy .card-value.accuracy-high {
+      color: #00A15D; /* 綠色 - 80-100% */
+    }
+
+    .performance-card.accuracy .card-value.accuracy-medium {
+      color: #E3CE00; /* 黃色 - 60-79% */
+    }
+
+    .performance-card.accuracy .card-value.accuracy-low {
+      color: #FF4842; /* 紅色 - 0-59% */
+    }
+
+    .performance-card .card-content {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between; /* 讓左右內容分散對齊 */
+      align-items: center;
+    }
+
+    .performance-card .card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left; /* 文字靠左對齊 */
+    }
+
+    .performance-card .card-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00a15d;
+      text-align: right; /* 數值靠右對齊 */
+    }
+
+    .performance-card .card-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 0;
+    }
+
+    .performance-card .card-description {
+      font-size: 13px;
+      color: #637381;
+      margin-top: 0;
+    }
+
+    .performance-card.time .card-value,
+    .performance-card.progress .card-value {
+      color: #222;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-content {
+        flex-direction: column;
+        gap: 24px;
+      }
+      .status-cards, .performance-cards {
+        min-width: 0;
+        width: 100%;
+      }
+      .status-cards {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+    }
+
+    /* 學生作答即時觀課區塊樣式 */
+    .realtime-observation-section {
+      margin-top: 40px;
+    }
+
+    .realtime-cards-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 改為3列 */
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* 學生卡片樣式 */
+    .student-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+      min-width: 320px;
+      max-width: 380px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .student-card.answering {
+      border-left: 4px solid #00A15D;
+    }
+
+    .student-card.needs-help {
+      border-left: 4px solid #FF4842;
+      background: rgba(255, 72, 66, 0.05);
+    }
+
+    /* 閃爍動畫效果 */
+    @keyframes blink {
+      0%, 50% {
+        opacity: 1;
+        background: rgba(255, 72, 66, 0.05);
+        border-left: 4px solid #FF4842;
+      }
+      25%, 75% {
+        opacity: 0.7;
+        background: rgba(255, 72, 66, 0.15);
+        border-left: 4px solid #FF4842;
+      }
+    }
+
+    .student-card.needs-help.blinking {
+      animation: blink 0.5s ease-in-out;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+
+    .student-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #212B36;
+      text-align: left;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .status-badge.answering {
+      background: rgba(0, 161, 93, 0.1);
+      color: #00A15D;
+    }
+
+    .status-badge.idle {
+      background: rgba(255, 197, 84, 0.1);
+      color: #E3CE00;
+    }
+
+    .status-badge.needs-help {
+      background: rgba(255, 72, 66, 0.1);
+      color: #FF4842;
+    }
+
+    .card-content {
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .test-info {
+      font-size: 14px;
+      color: #637381;
+      text-align: left;
+      width: 100%;
+      word-wrap: break-word;
+      order: 1;
+    }
+
+    .progress-info {
+      font-size: 13px;
+      color: #637381;
+      text-align: left;
+      width: 100%;
+      order: 2;
+    }
+
+    .question-indicators {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap; /* 允許換行 */
+      max-height: 60px; /* 限制最大高度 */
+      overflow-y: auto; /* 如果題目太多，允許垂直滾動 */
+      width: 100%;
+      justify-content: flex-start;
+      order: 3;
+    }
+
+    .indicator {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      flex-shrink: 0; /* 防止指示器被壓縮 */
+    }
+
+    .indicator.correct {
+      background: #00A15D;
+    }
+
+    .indicator.incorrect {
+      background: #FF4842;
+    }
+
+    .indicator.unanswered {
+      background: #C1C1C1;
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: 700;
+      color: #00A15D;
+      text-align: left;
+      width: 100%;
+      order: 4;
+    }
+
+    /* 分數顏色樣式 */
+    .score.score-high {
+      color: #00A15D; /* 綠色 - 80-100分 */
+    }
+
+    .score.score-medium {
+      color: #E3CE00; /* 黃色 - 60-79分 */
+    }
+
+    .score.score-low {
+      color: #FF4842; /* 紅色 - 0-59分 */
+    }
+
+    .card-footer {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #637381;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 8px 16px;
+      border: none;
+      background: #00A15D;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #087144;
+    }
+
+    @media (max-width: 1200px) {
+      .realtime-cards-container {
+        grid-template-columns: repeat(2, 1fr); /* 中等螢幕顯示2列 */
+        max-width: 800px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .realtime-cards-container {
+        grid-template-columns: 1fr; /* 小螢幕顯示1列 */
+        max-width: 400px;
+      }
+      
+      .student-card {
+        min-width: auto;
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+        <img src="../asset/Logo.svg" alt="Nani學習360" width="178" height="26" style="vertical-align:middle;">
+    </div>
+    <nav class="nav">
+      <div class="nav-item">我的</div>
+      <div class="nav-item active">學習</div>
+      <div class="nav-item">任務</div>
+      <div class="nav-item">分析</div>
+    </nav>
+    <div class="header-right">
+      <div class="search-icon">
+        <img src="../asset/ic_search.svg" alt="搜尋" width="24" height="24">
+      </div>
+      <div class="avatar">
+        <img src="../asset/Avatar.png" alt="王老師" width="40" height="40" style="border-radius: 50%; object-fit: cover;">
+      </div>
+      <span class="user-name">王老師</span>
+    </div>
+  </header>
+  <div class="sub-header">
+    <div class="tab">
+      <div class="text">國語</div>
+    </div>
+    <div class="tab">
+      <div class="text">英語</div>
+    </div>
+    <div class="tab-2 active">
+      <div class="div-2">
+        <img class="icon-d-drafting" src="../asset/drafting_compass_solid.svg" />
+        <div class="text-wrapper">數學</div>
+      </div>
+      <div class="rectangle"></div>
+    </div>
+    <div class="tab">
+      <div class="text">社會</div>
+    </div>
+    <div class="tab">
+      <div class="text">自然</div>
+    </div>
+  </div>
+  <style>
+    .sub-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #eaf8ec;
+      border-bottom: 2px solid #eee;
+      padding: 0px 200px;
+      height: 55px;
+      gap: 64px;
+    }
+
+    .tab {
+      width: 208px;
+      height: 24px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border-radius: 8px;
+    }
+
+    .tab .text {
+      font-family: "Noto Sans TC-Bold", Helvetica;
+      font-weight: 700;
+      color: #637381;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 0;
+      line-height: 24px;
+      width: 100%;
+    }
+
+    .tab-2 {
+      width: 208px;
+      height: 24px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 8px;
+    }
+
+    .tab-2 .div-2 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .tab-2 .text-wrapper {
+      font-family: "Noto Sans TC-Bold", Helvetica;
+      font-weight: 700;
+      color: #222;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 0;
+      line-height: 24px;
+    }
+
+    .icon-d-drafting {
+      width: 24px;
+      height: 24px;
+    }
+
+    .tab-2.active .text-wrapper {
+      color: #222;
+    }
+
+    .tab-2.active .rectangle {
+      display: block;
+    }
+
+    .rectangle {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -16px;
+      height: 4px;
+      background: #2d3c3a;
+      border-radius: 2px 2px 0 0;
+      display: none; /* 預設隱藏，只有 active 時顯示 */
+    }
+
+    .text {
+      color: #6b7a87;
+    }
+    @media (max-width: 800px) {
+      .sub-header {
+        gap: 24px;
+        height: 48px;
+      }
+      .sub-header-item {
+        font-size: 1.1rem;
+        padding-bottom: 4px;
+      }
+    }
+    /* Footer 樣式 */
+    .footer {
+      background: #eaf8ec;
+      padding: 16px 0;
+      margin-top: 40px;
+    }
+    
+
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 200px;
+    }
+
+    .copyright {
+      font-family: "Noto Sans TC", Helvetica;
+      font-size: 14px;
+      color: #637381;
+      text-align: center;
+      flex: 1;
+    }
+
+    .version {
+      font-family: "Noto Sans TC", Helvetica;
+      font-size: 14px;
+      color: #637381;
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 20px;
+      }
+      
+      .copyright {
+        text-align: center;
+      }
+      
+      .version {
+        text-align: center;
+      }
+    }
+  </style>
+  <!-- 這裡可以放主內容 -->
+  <div class="grade-tabs-wrapper">
+    <div class="grade-tabs">
+      <div class="grade-tab active" data-grade="7">七年級</div>
+      <div class="grade-tab" data-grade="8">八年級</div>
+      <div class="grade-tab" data-grade="9">九年級</div>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="grade-content" id="grade-7">
+      <div class="unit">
+        <div class="unit-title">國中數學七年級</div>
+        <div class="unit-group">
+          <div class="unit-header">數 <img class="dropdown" src="../asset/ic_expand_more.svg" alt="展開" width="24" height="24"></div>
+          <div class="topic-list">
+            <div class="topic">
+              <span class="topic-title">1. 正數與負數</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">2. 數線</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">3. 數的大小</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">4. 相反數</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">5. 絕對值</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">6. 數線上中點坐標</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">7. 數線上兩點的距離</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="unit-group">
+          <div class="unit-header">整數的運算 <img class="dropdown" src="../asset/ic_expand_more.svg" alt="展開" width="24" height="24"></div>
+          <div class="topic-list">
+            <div class="topic">
+              <span class="topic-title">1. 整數的加法</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">2. 整數的減法</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">3. 整數的乘法</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">4. 整數的除法</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">5. 整數的四則運算</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="unit-group">
+          <div class="unit-header">指數 <img class="dropdown" src="../asset/ic_expand_more.svg" alt="展開" width="24" height="24"></div>
+          <div class="topic-list">
+            <div class="topic">
+              <span class="topic-title">1. 指數</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+            <div class="topic">
+              <span class="topic-title">2. 指數律</span>
+              <div class="topic-actions">
+                <button class="action-btn" data-tooltip="派練習">
+                  <img src="../asset/practice.svg" alt="練習" width="18" height="13">
+                </button>
+                <button class="action-btn" data-tooltip="派測驗">
+                  <img src="../asset/test.svg" alt="測驗" width="20" height="20">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grade-content" id="grade-8" style="display:none">
+      <div class="unit">
+        <div class="unit-title">國中數學二年級</div>
+        <div class="unit-group">
+          <div class="unit-header">（請自行補充內容）</div>
+        </div>
+      </div>
+    </div>
+    <div class="grade-content" id="grade-9" style="display:none">
+      <div class="unit">
+        <div class="unit-title">國中數學三年級</div>
+        <div class="unit-group">
+          <div class="unit-header">（請自行補充內容）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    .grade-tabs-wrapper {
+      width: 100%;
+      display: block;
+      margin-top: 40px;
+      margin-bottom: 2px;
+      z-index: 10;
+      position: relative;
+      max-width: 1134px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .grade-tabs {
+      display: flex;
+      gap: 0;
+      background: #fafcfc;
+      border-radius: 24px 24px 0 0;
+      overflow: hidden;
+      border-bottom: 2px solid #e5eaea;
+      box-shadow: 0 4px 16px #009e5b0a;
+      margin-left: 0;
+      position: relative;
+      z-index: 2;
+      width: 1200px;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .main-content {
+      background: #fff;
+      border-radius: 0px 0px 20px 20px;
+      margin: 0 auto 0 auto;
+      padding: 40px 48px;
+      box-shadow: 0 8px 32px #009e5b14;
+      min-height: 400px;
+      max-width: 1040px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      top: -2px;
+    }
+    .grade-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0px;
+      background: #fafcfc;
+      border-radius: 24px 24px 0 0;
+      overflow: hidden;
+      border-bottom: 2px solid #e5eaea;
+    }
+    .grade-tab {
+      padding: 12px 28px 8px 28px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #009e5b;
+      background: #fafcfc;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s, color 0.2s;
+      border-right: 1px solid #e5eaea;
+      z-index: 1;
+    }
+    .grade-tab:last-child {
+      border-right: none;
+    }
+    .grade-tab.active {
+      background: #009e5b;
+      color: #fff;
+      border-radius: 24px 0 0 0;
+      z-index: 2;
+    }
+    .grade-tab.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+      background: #009e5b;
+      border-radius: 0 0 0 0;
+      z-index: 3;
+    }
+    .grade-tab:not(.active):hover {
+      background: #f2f8f6;
+    }
+    .grade-content {
+      margin-top: 0;
+    }
+    .unit-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #212B36;
+    }
+    .unit-group {
+      margin-bottom: 24px;
+      border-radius: 12px;
+    }
+    .unit-header {
+      font-size: 18px;
+      font-weight: 500;
+      color: #212B36;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .dropdown {
+      width: 24px;
+      height: 24px;
+      margin-left: 4px;
+    }
+    .topic-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .topic {
+      background: #fff;
+      border: 1px solid #3ec28f44;
+      border-radius: 12px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 236px;
+      max-width: 248px;
+      flex: 1 1 320px;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+      transition: box-shadow 0.2s, border 0.2s;
+    }
+    .topic-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #087144;
+    }
+    .topic-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .action-btn {
+      background: #eaf8ec;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: box-shadow 0.18s, background 0.18s;
+      box-shadow: 0 0 0 #0000;
+      position: relative;
+    }
+
+    .action-btn:hover {
+      box-shadow: 0 2px 8px #009e5b33;
+      background: #c6f2d8;
+    }
+
+    .action-btn img {
+      width: 18px;
+      height: 13px;
+    }
+
+    .action-btn:last-child img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Popup 樣式 */
+    .action-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 6px; /* 改為 6px，與三角形高度一致 */
+      padding: 10px 12px 14px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-family: "Noto Sans TC-Medium", Helvetica;
+      font-weight: 500;
+      color: #222;
+      font-size: 14px;
+      text-align: center;
+      letter-spacing: 0;
+      line-height: 18px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 1001;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 0px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #fff;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 1002;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    .action-btn:hover::after,
+    .action-btn:hover::before {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 派測驗彈窗樣式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      position: relative;
+      z-index: 1001;
+    }
+
+    /* 防止背景滾動 */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 32px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #212B36;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #637381;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #f5f5f5;
+    }
+
+    .modal-filters {
+      padding: 16px 32px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .filter-group label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #212B36;
+    }
+
+    .filter-select {
+      padding: 4px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .filter-select.inactive {
+      background: #fff;
+      border-color: #e0e0e0;
+      color: #637381;
+    }
+
+    .filter-select.inactive option {
+      color: #999;
+    }
+
+    .filter-select.active {
+      background: #fff;
+      border-color: #ddd;
+      color: #212B36;
+    }
+
+    .search-input {
+      position: relative;
+      flex: 2;
+    }
+
+    .search-input input {
+      width: 100%;
+      padding: 8px 12px 8px 40px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .search-input img {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.6;
+    }
+
+    .student-list {
+      flex: 1;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      max-height: 360px;
+      overflow: hidden;
+    }
+
+    .student-table {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-height: 360px;
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      background: #f4f6f8;
+      padding: 12px 32px;
+      border-bottom: 1px solid #e0e0e0;
+      flex-shrink: 0;
+    }
+
+    .header-checkbox {
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-seat {
+      width: 40px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #637381;
+      text-align: center;
+    }
+
+    .header-name {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 500;
+      color: #637381;
+      padding-left: 16px;
+    }
+
+    .table-body {
+      flex: 1;
+      overflow-y: auto;
+      max-height: calc(360px - 60px); /* 360px 減去 header 高度 */
+    }
+
+    .student-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 32px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s;
+    }
+
+    .student-row:hover {
+      background-color: #f8f9fa;
+    }
+
+    .row-checkbox {
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .row-seat {
+      width: 40px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #212b36;
+      text-align: center;
+    }
+
+    .row-name {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 500;
+      color: #212b36;
+      padding-left: 16px;
+    }
+
+    /* 滾動條樣式 */
+    .table-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .table-body::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    .table-body::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+
+    .table-body::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+
+    /* Checkbox 樣式 */
+    .header-checkbox input[type="checkbox"],
+    .row-checkbox input[type="checkbox"] {
+      display: none;
+    }
+
+    .header-checkbox label,
+    .row-checkbox label {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .header-checkbox input[type="checkbox"]:checked + label,
+    .row-checkbox input[type="checkbox"]:checked + label {
+      background-color: #009e5b;
+      border-color: #009e5b;
+    }
+
+    .header-checkbox input[type="checkbox"]:checked + label::after,
+    .row-checkbox input[type="checkbox"]:checked + label::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    /* Empty state 樣式（保留以備用） */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .empty-illustration {
+      width: 120px;
+      height: 90px;
+      margin-bottom: 16px;
+    }
+
+    .empty-illustration img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    
+
+    .empty-text {
+      font-size: 14px;
+      color: #637381;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px 24px;
+      border-top: 1px solid #eee;
+    }
+
+    .selection-info {
+      font-size: 14px;
+      color: #637381;
+      display: none; /* 預設隱藏 */
+      flex: 1; /* 佔用剩餘空間 */
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-left: auto; /* 確保按鈕始終在右邊 */
+    }
+
+    .btn-cancel {
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #637381;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-dispatch {
+      padding: 8px 16px;
+      border: none;
+      background: #009e5b;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-dispatch:hover {
+      background: #087144;
+    }
+
+    .btn-dispatch:disabled {
+      background: #e0e0e0;
+      color: #999;
+      cursor: not-allowed;
+      transition: none;
+    }
+
+    .btn-dispatch:disabled:hover {
+      background: #e0e0e0;
+    }
+
+    /* 成功彈窗樣式 */
+    .success-modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 480px;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      position: relative;
+      z-index: 1001;
+    }
+
+    .success-icon {
+      margin-bottom: 24px;
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #212B36;
+      margin-bottom: 16px;
+    }
+
+    .success-message {
+      font-size: 16px;
+      color: #637381;
+      line-height: 1.5;
+      margin-bottom: 32px;
+      max-width: 380px;
+    }
+
+    .success-actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn-stay {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #637381;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-stay:hover {
+      background: #f5f5f5;
+    }
+
+    .btn-go-online {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: #009e5b;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-go-online:hover {
+      background: #087144;
+    }
+
+    @media (max-width: 768px) {
+      .modal {
+        width: 95%;
+        margin: 20px;
+      }
+      
+      .modal-header,
+      .modal-filters,
+      .student-list,
+      .modal-footer {
+        padding: 16px 20px;
+      }
+      
+      .filter-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .search-input {
+        flex: none;
+      }
+      
+      .modal-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .success-modal {
+        width: 95%;
+        padding: 32px 24px;
+      }
+      
+      .success-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .success-title {
+        font-size: 20px;
+      }
+      
+      .success-message {
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 900px) {
+      .main-content {
+        padding: 12px 2px 24px 2px;
+      }
+      .grade-tab {
+        padding: 16px 16px 8px 16px;
+        font-size: 1.1rem;
+      }
+      .topic {
+        min-width: 180px;
+        flex: 1 1 200px;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-content {
+        padding: 4px 0 12px 0;
+      }
+      .grade-tab {
+        padding: 8px 6px 4px 6px;
+        font-size: 1rem;
+      }
+      .topic {
+        min-width: 120px;
+        flex: 1 1 120px;
+        padding: 8px 8px;
+      }
+    }
+  </style>
+  <!-- 派測驗彈窗 -->
+  <div class="modal-overlay" id="testModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">派測驗</h3>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      
+      <div class="modal-filters">
+        <div class="filter-row">
+          <div class="filter-group">
+            
+            <select class="filter-select inactive">
+              <option value="" selected>選擇年級</option>
+              <option value="7">七年級</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            
+            <select class="filter-select inactive">
+              <option value="" selected>選擇班級</option>
+              <option value="701">七年一班</option>
+            </select>
+          </div>
+          
+          <div class="search-input">
+            <input type="text" placeholder="搜尋 學生姓名">
+            <img src="../asset/ic_search.svg" alt="搜尋" width="16" height="16">
+          </div>
+        </div>
+      </div>
+      
+      <div class="student-list">
+        <div class="empty-state">
+          <div class="empty-illustration"></div>
+        </div>
+        <div class="empty-text">尚無資料，請選擇年級及班級</div>
+      </div>
+      
+      <div class="modal-footer">
+        <div class="selection-info">已選取 0 個 / 共 30 個</div>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">取消</button>
+          <button class="btn-dispatch" onclick="dispatchTest()">派測驗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 派測驗成功彈窗 -->
+  <div class="modal-overlay" id="successModal">
+    <div class="success-modal">
+      <div class="success-icon">
+        <img src="../asset/ic_verified.svg" alt="成功圖標" width="64" height="64">
+      </div>
+      <div class="success-title">派測驗成功</div>
+      <div class="success-message">測驗已派發，可前往「線上觀課」查看學生答題狀況</div>
+      <div class="success-actions">
+        <button class="btn-stay" onclick="closeSuccessModal()">停留此頁</button>
+        <button class="btn-go-online" onclick="goToOnlineObservation()">前往線上觀課</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // 派測驗彈窗功能 - 先定義函數
+    function openTestModal() {
+      console.log('openTestModal called'); // 調試用
+      const modal = document.getElementById('testModal');
+      const body = document.body;
+      
+      if (modal) {
+        // 顯示彈窗
+        modal.style.display = 'flex';
+        modal.classList.add('active');
+        
+        // 防止背景滾動和點擊
+        body.classList.add('modal-open');
+        
+        // 重置年級和班級選擇
+        const gradeSelect = document.querySelector('.filter-select');
+        const classSelect = document.querySelectorAll('.filter-select')[1];
+        
+        if (gradeSelect) {
+          gradeSelect.value = '';
+          gradeSelect.classList.remove('active');
+          gradeSelect.classList.add('inactive');
+        }
+        
+        if (classSelect) {
+          classSelect.value = '';
+          classSelect.classList.remove('active');
+          classSelect.classList.add('inactive');
+        }
+        
+        // 重置派測驗按鈕狀態
+        updateDispatchButtonState();
+        
+        // 顯示空狀態
+        showEmptyState();
+        
+        // 添加點擊遮罩關閉功能
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+        
+        // 添加 ESC 鍵關閉功能
+        document.addEventListener('keydown', handleEscapeKey);
+      } else {
+        console.error('Modal not found');
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('testModal');
+      const body = document.body;
+      
+      if (modal) {
+        // 隱藏彈窗
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+        
+        // 恢復背景滾動和點擊
+        body.classList.remove('modal-open');
+        
+        // 移除事件監聽器
+        document.removeEventListener('keydown', handleEscapeKey);
+      }
+    }
+
+    // 處理 ESC 鍵關閉彈窗
+    function handleEscapeKey(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    }
+
+    function dispatchTest() {
+      // 關閉派測驗彈窗
+      closeModal();
+      
+      // 顯示成功彈窗
+      showSuccessModal();
+    }
+
+    // 顯示成功彈窗
+    function showSuccessModal() {
+      const successModal = document.getElementById('successModal');
+      const body = document.body;
+      
+      if (successModal) {
+        // 顯示成功彈窗
+        successModal.style.display = 'flex';
+        successModal.classList.add('active');
+        
+        // 防止背景滾動和點擊
+        body.classList.add('modal-open');
+        
+        // 添加點擊遮罩關閉功能
+        successModal.addEventListener('click', function(e) {
+          if (e.target === successModal) {
+            closeSuccessModal();
+          }
+        });
+        
+        // 添加 ESC 鍵關閉功能
+        document.addEventListener('keydown', handleSuccessEscapeKey);
+      }
+    }
+
+    // 關閉成功彈窗
+    function closeSuccessModal() {
+      const successModal = document.getElementById('successModal');
+      const body = document.body;
+      
+      if (successModal) {
+        // 隱藏成功彈窗
+        successModal.style.display = 'none';
+        successModal.classList.remove('active');
+        
+        // 恢復背景滾動和點擊
+        body.classList.remove('modal-open');
+        
+        // 移除事件監聽器
+        document.removeEventListener('keydown', handleSuccessEscapeKey);
+      }
+    }
+
+    // 處理成功彈窗的 ESC 鍵關閉
+    function handleSuccessEscapeKey(e) {
+      if (e.key === 'Escape') {
+        closeSuccessModal();
+      }
+    }
+
+    // 前往線上觀課
+    function goToOnlineObservation() {
+      // 切換到「我的」頁面
+      switchToMyPage();
+      // 顯示線上觀課內容
+      document.getElementById('online-observation-content').style.display = 'block';
+      // 可選：隱藏其他 main-content
+      var mainContent = document.querySelector('.main-content');
+      if (mainContent) mainContent.style.display = 'none';
+      closeSuccessModal();
+    }
+
+    // 切換到「我的」頁面
+    function switchToMyPage() {
+      // 隱藏原本的數學頁面內容
+      hideMathContent();
+      
+      // 隱藏分析頁面內容
+      hideAnalysisContent();
+      
+      // 隱藏 third header
+      hideThirdHeader();
+      
+      // 更新 sub-header
+      updateSubHeaderForMyPage();
+    }
+
+    // 切換到「學習」頁面
+    function switchToStudyPage() {
+      // 顯示原本的數學頁面內容
+      showMathContent();
+      
+      // 更新 sub-header 為學習頁面
+      updateSubHeaderForStudyPage();
+      
+      // 隱藏線上觀課內容
+      hideOnlineObservationContent();
+      
+      // 隱藏分析頁面內容
+      hideAnalysisContent();
+      
+      // 隱藏 third header
+      hideThirdHeader();
+      
+      // 確保 footer 顯示
+      const footer = document.querySelector('.footer');
+      if (footer) {
+        footer.style.display = 'block';
+      }
+    }
+
+    // 隱藏線上觀課內容
+    function hideOnlineObservationContent() {
+      const onlineContent = document.getElementById('online-observation-content');
+      if (onlineContent) {
+        onlineContent.style.display = 'none';
+      }
+    }
+
+    // 切換到「分析」頁面
+    function switchToAnalysisPage() {
+      // 隱藏原本的數學頁面內容
+      hideMathContent();
+      
+      // 隱藏線上觀課內容
+      hideOnlineObservationContent();
+      
+      // 更新 sub-header 為分析頁面
+      updateSubHeaderForAnalysisPage();
+      
+      // 顯示分析頁面內容
+      showAnalysisContent();
+    }
+
+    // 顯示分析頁面內容
+    function showAnalysisContent() {
+      // 創建分析頁面內容（如果不存在）
+      let analysisContent = document.getElementById('analysis-content');
+      if (!analysisContent) {
+        analysisContent = document.createElement('div');
+        analysisContent.id = 'analysis-content';
+        analysisContent.className = 'analysis-content';
+        analysisContent.innerHTML = `
+          <div class="page-header">
+            <h1 class="page-title">知識點學習狀況分析</h1>
+            <div class="knowledge-point-filter">
+              <div class="filter-indicator"></div>
+              <div class="filter-label">知識點：</div>
+              <div class="filter-select-wrapper">
+                <select class="knowledge-point-select">
+                  <option>數 - 正數與負數</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="overview-section">
+            <div class="overview-cards">
+              <div class="learning-status-card">
+                <div class="card-header">
+                  <h3>學習狀況</h3>
+                </div>
+                <div class="status-content">
+                  <div class="pie-chart-container">
+                    <div class="pie-chart">
+                      <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#E5E5E5" stroke-width="10"/>
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#00A15D" stroke-width="10" stroke-dasharray="78.5 314" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#FFB73D" stroke-width="10" stroke-dasharray="194.7 314" stroke-dashoffset="-78.5" transform="rotate(-90 60 60)"/>
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#637381" stroke-width="10" stroke-dasharray="40.8 314" stroke-dashoffset="-273.2" transform="rotate(-90 60 60)"/>
+                      </svg>
+                    </div>
+                    <div class="legend">
+                      <div class="legend-item">
+                        <div class="legend-color proficient"></div>
+                        <span>25% 精通</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="legend-color practicing"></div>
+                        <span>62% 練習中</span>
+                      </div>
+                      <div class="legend-item">
+                        <div class="legend-color not-practiced"></div>
+                        <span>13% 沒有練習</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="divider"></div>
+              
+              <div class="stats-card">
+                <div class="stats-icon">
+                  <img src="../asset/ic_edit 2.svg" alt="回答題數圖標" width="60" height="60">
+                </div>
+                <div class="stats-label">回答題數</div>
+                <div class="stats-value">9 題</div>
+              </div>
+              
+              <div class="stats-card">
+                <div class="stats-icon">
+                  <img src="../asset/ic_clock_outline.svg" alt="花費時間圖標" width="60" height="60">
+                </div>
+                <div class="stats-label">花費時間</div>
+                <div class="stats-value">10 分鐘</div>
+              </div>
+              
+              <div class="stats-card">
+                <div class="stats-icon">
+                  <img src="../asset/ic_user_group 2.svg" alt="測驗人數圖標" width="60" height="60">
+                </div>
+                <div class="stats-label">測驗人數</div>
+                <div class="stats-value">2 人</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="proficiency-section">
+            <h2 class="section-title">知識點熟練程度</h2>
+            
+            <div class="master-container">
+              <div class="proficiency-level master">
+                <div class="level-header">
+                  <div class="level-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#FFB73D"/>
+                    </svg>
+                  </div>
+                  <h3>精通</h3>
+                </div>
+                <div class="level-content">
+                  <div class="student-name-card">
+                    <div class="student-avatar">
+                      <img src="../asset/Avatar.png" alt="林小美" width="40" height="40">
+                    </div>
+                    <div class="student-info">
+                      <span class="student-name">林小美 - 100</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="proficiency-levels-container">
+              <div class="practice-header">
+                <h3>練習中</h3>
+              </div>
+              <div class="proficiency-level practicing">
+                <h3 class="level-title">熟練</h3>
+                <div class="level-content">
+                  <div class="level-description">最近做過這個難易度的題目</div>
+                  
+                  <div class="question-section">
+                    <div class="question-navigation">
+                      <button class="nav-btn prev" onclick="showPreviousQuestion('practicing')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#637381"/>
+                        </svg>
+                      </button>
+                    </div>
+                    
+                    <div class="question-content" id="practicing-question-1">
+                      <div class="question-header">
+                        <span class="question-type">單選題</span>
+                      </div>
+                      <div class="question-text">
+                        如附圖，將2、18、54、162四個數字分別填入圖中的四個空格中，並使得直列上三個數的乘積與橫排上三個數的乘積相等。試問正中間的空格中不可能是下列哪一組數字？
+                      </div>
+                      <div class="question-image">
+                        <img src="../asset/學習360國中一年級數學題/第十題-難-圖.png" alt="題目圖片" width="400" height="162">
+                      </div>
+                      <div class="question-options">
+                        (A)2 (B)18 (C)54 (D)162
+                      </div>
+                    </div>
+                    
+                    <div class="question-content" id="practicing-question-2" style="display: none;">
+                      <div class="question-header">
+                        <span class="question-type">單選題</span>
+                      </div>
+                      <div class="question-text">
+                        計算 12963×381 + 2963×619=?
+                      </div>
+                      <div class="question-image" style="background: transparent; border: none;">
+                        <!-- 空的圖片區域，維持高度一致 -->
+                      </div>
+                      <div class="question-options">
+                        (A)6773000 (B)6783000 (C)2963000 (D)6793000
+                      </div>
+                    </div>
+                    
+                    <div class="question-navigation">
+                      <button class="nav-btn next" onclick="showNextQuestion('practicing')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" fill="#637381"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="students-section">
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="林小美" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">陳小華 - 82</span>
+                      </div>
+                    </div>
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="王小明" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">劉小強 - 80</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="proficiency-level familiar">
+                <h3 class="level-title">熟悉</h3>
+                <div class="level-content">
+                  <div class="level-description">最近做過這個難易度的題目</div>
+                  
+                  <div class="question-section">
+                    <div class="question-navigation">
+                      <button class="nav-btn prev" onclick="showPreviousQuestion('familiar')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#637381"/>
+                        </svg>
+                      </button>
+                    </div>
+                    
+                    <div class="question-content" id="familiar-question-1">
+                      <div class="question-header">
+                        <span class="question-type">單選題</span>
+                      </div>
+                      <div class="question-text">
+                        已知甲數×乙數是負數，乙數×丙數是正數，則下列何者一定是負數？　(A)甲數＋丙數　(B)甲數－丙數　(C)乙數－丙數　(D)甲數÷丙數
+                      </div>
+                    </div>
+                    
+                    <div class="question-content" id="familiar-question-2" style="display: none;">
+                      <div class="question-header">
+                        <span class="question-type">單選題</span>
+                      </div>
+                      <div class="question-text">
+                        考試成績以 60 分為準，若考72分記為十12，則考多少分可以記為一18？
+                      </div>
+                      <div class="question-options">
+                        (A)18 (B)28 (C)42 (D)82
+                      </div>
+                    </div>
+                    
+                    <div class="question-navigation">
+                      <button class="nav-btn next" onclick="showNextQuestion('familiar')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" fill="#637381"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="students-section">
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="杜新" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">杜新 - 73</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="proficiency-level basic">
+                <h3 class="level-title">基礎</h3>
+                <div class="level-content">
+                  <div class="level-description">最近做過這個難易度的題目</div>
+                  
+                  <div class="question-section">
+                    <div class="question-navigation">
+                      <button class="nav-btn prev">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="#637381"/>
+                        </svg>
+                      </button>
+                    </div>
+                    
+                    <div class="question-content">
+                      <div class="question-header">
+                        <span class="question-type">單選題</span>
+                      </div>
+                      <div class="question-text">
+                        下列敘述何者錯誤？　(A)0的相反數為0　(B)－7的相反數為－(－7)　(C)5－(－3)的相反數為5＋(－3)　(D)|(－3)－8|＝8－(－3)
+                      </div>
+                    </div>
+                    
+                    <div class="question-navigation">
+                      <button class="nav-btn next">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" fill="#637381"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="students-section">
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="葉庭" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">葉庭 - 59</span>
+                      </div>
+                    </div>
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="洪欣" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">洪欣 - 45</span>
+                      </div>
+                    </div>
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="陳宜庭" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">陳宜庭 - 23</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="no-test-container">
+              <div class="proficiency-level no-test">
+                <h3 class="level-title">沒有做過測驗</h3>
+                <div class="level-content">
+                  <div class="students-section">
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="陳風" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">陳風</span>
+                      </div>
+                    </div>
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="魯傑" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">魯傑</span>
+                      </div>
+                    </div>
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="王美" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">王美</span>
+                      </div>
+                    </div>
+                    <div class="student-name-card">
+                      <div class="student-avatar">
+                        <img src="../asset/Avatar.png" alt="林任" width="40" height="40">
+                      </div>
+                      <div class="student-info">
+                        <span class="student-name">林任</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // 將分析頁面內容插入到 footer 之前
+        const footer = document.querySelector('.footer');
+        if (footer) {
+          document.body.insertBefore(analysisContent, footer);
+        } else {
+          document.body.appendChild(analysisContent);
+        }
+      }
+      
+      // 顯示分析頁面內容
+      analysisContent.style.display = 'block';
+      
+      // 確保 footer 顯示
+      const footer = document.querySelector('.footer');
+      if (footer) {
+        footer.style.display = 'block';
+      }
+    }
+
+    // 隱藏分析頁面內容
+    function hideAnalysisContent() {
+      const analysisContent = document.getElementById('analysis-content');
+      if (analysisContent) {
+        analysisContent.style.display = 'none';
+      }
+    }
+
+    // 隱藏數學頁面內容
+    function hideMathContent() {
+      // 隱藏 grade tabs
+      const gradeTabsWrapper = document.querySelector('.grade-tabs-wrapper');
+      if (gradeTabsWrapper) {
+        gradeTabsWrapper.style.display = 'none';
+      }
+      
+      // 隱藏 main content
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.display = 'none';
+      }
+    }
+
+    // 顯示數學頁面內容
+    function showMathContent() {
+      // 顯示 grade tabs
+      const gradeTabsWrapper = document.querySelector('.grade-tabs-wrapper');
+      if (gradeTabsWrapper) {
+        gradeTabsWrapper.style.display = 'block';
+      }
+      
+      // 顯示 main content
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.style.display = 'block';
+      }
+    }
+
+    // 更新 sub-header 為「學習」頁面的選項
+    function updateSubHeaderForStudyPage() {
+      const subHeader = document.querySelector('.sub-header');
+      if (subHeader) {
+        subHeader.innerHTML = `
+          <div class="tab">
+            <div class="text">國語</div>
+          </div>
+          <div class="tab">
+            <div class="text">英語</div>
+          </div>
+          <div class="tab-2 active">
+            <div class="div-2">
+              <img class="icon-d-drafting" src="../asset/drafting_compass_solid.svg" />
+              <div class="text-wrapper">數學</div>
+            </div>
+            <div class="rectangle"></div>
+          </div>
+          <div class="tab">
+            <div class="text">社會</div>
+          </div>
+          <div class="tab">
+            <div class="text">自然</div>
+          </div>
+        `;
+        
+        // 重新綁定 sub-header 的點擊事件
+        bindSubHeaderEvents();
+      }
+    }
+
+    // 更新 sub-header 為「我的」頁面的選項
+    function updateSubHeaderForMyPage() {
+      const subHeader = document.querySelector('.sub-header');
+      if (subHeader) {
+        subHeader.innerHTML = `
+          <div class="tab">
+            <div class="text">總覽</div>
+          </div>
+          <div class="tab-2 active">
+            <div class="div-2">
+              <img class="icon-d-drafting" src="../asset/drafting_compass_solid.svg" />
+              <div class="text-wrapper">線上觀課</div>
+            </div>
+            <div class="rectangle"></div>
+          </div>
+          <div class="tab">
+            <div class="text">考卷</div>
+          </div>
+          <div class="tab">
+            <div class="text">徽章</div>
+          </div>
+          <div class="tab">
+            <div class="text">資源</div>
+          </div>
+        `;
+        
+        // 重新綁定 sub-header 的點擊事件
+        bindSubHeaderEvents();
+        
+        // 顯示線上觀課內容
+        showOnlineObservationContent();
+      }
+    }
+
+    // 更新 sub-header 為「分析」頁面的選項
+    function updateSubHeaderForAnalysisPage() {
+      const subHeader = document.querySelector('.sub-header');
+      if (subHeader) {
+        subHeader.innerHTML = `
+          <div class="tab">
+            <div class="text">學生</div>
+          </div>
+          <div class="tab">
+            <div class="text">任務</div>
+          </div>
+          <div class="tab">
+            <div class="text">錯題</div>
+          </div>
+          <div class="tab-2 active">
+            <div class="div-2">
+              <img class="icon-d-drafting" src="../asset/drafting_compass_solid.svg" />
+              <div class="text-wrapper">知識點</div>
+            </div>
+            <div class="rectangle"></div>
+          </div>
+          <div class="tab">
+            <div class="text">分數</div>
+          </div>
+          <div class="tab">
+            <div class="text">考卷</div>
+          </div>
+          <div class="tab">
+            <div class="text">數據</div>
+          </div>
+        `;
+        
+        // 重新綁定 sub-header 的點擊事件
+        bindSubHeaderEvents();
+      }
+      
+      // 創建 third header
+      createThirdHeader();
+    }
+
+    // 創建 third header
+    function createThirdHeader() {
+      // 檢查是否已存在 third header
+      let thirdHeader = document.querySelector('.third-header');
+      if (!thirdHeader) {
+        thirdHeader = document.createElement('div');
+        thirdHeader.className = 'third-header';
+        thirdHeader.innerHTML = `
+          <div class="third-header-content">
+            <div class="filter-selects">
+              <div class="filter-select">
+                <select class="subject-select">
+                  <option value="math">數學</option>
+                  <option value="chinese">國語</option>
+                  <option value="english">英語</option>
+                  <option value="social">社會</option>
+                  <option value="science">自然</option>
+                </select>
+                <div class="select-arrow">
+                  <img src="../asset/ic_expand_more.svg" alt="展開" width="24" height="24">
+                </div>
+              </div>
+              <div class="filter-select">
+                <select class="class-select">
+                  <option value="701">七年一班</option>
+                  <option value="702">七年二班</option>
+                  <option value="703">七年三班</option>
+                  <option value="801">八年一班</option>
+                  <option value="802">八年二班</option>
+                  <option value="901">九年一班</option>
+                  <option value="902">九年二班</option>
+                </select>
+                <div class="select-arrow">
+                  <img src="../asset/ic_expand_more.svg" alt="展開" width="24" height="24">
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // 將 third header 插入到 sub-header 之後
+        const subHeader = document.querySelector('.sub-header');
+        if (subHeader) {
+          subHeader.parentNode.insertBefore(thirdHeader, subHeader.nextSibling);
+        }
+      }
+      
+      // 顯示 third header
+      thirdHeader.style.display = 'block';
+    }
+
+    // 隱藏 third header
+    function hideThirdHeader() {
+      const thirdHeader = document.querySelector('.third-header');
+      if (thirdHeader) {
+        thirdHeader.style.display = 'none';
+      }
+    }
+
+    // 綁定 sub-header 事件
+    function bindSubHeaderEvents() {
+      const tabs = document.querySelectorAll('.tab, .tab-2');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // 移除所有 tab 的 active 狀態
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            // 移除底線
+            const rect = t.querySelector('.rectangle');
+            if (rect) rect.style.display = 'none';
+            // 重置文字顏色
+            const text = t.querySelector('.text, .text-wrapper');
+            if (text) text.style.color = '#637381';
+          });
+          
+          // 為當前點擊的 tab 添加 active 狀態
+          this.classList.add('active');
+          
+          // 添加底線
+          const rect = this.querySelector('.rectangle');
+          if (rect) rect.style.display = 'block';
+          
+          // 改變文字顏色
+          const text = this.querySelector('.text, .text-wrapper');
+          if (text) text.style.color = '#222';
+        });
+      });
+    }
+
+    // 更新派測驗按鈕狀態
+    function updateDispatchButtonState() {
+      const gradeSelect = document.querySelector('.filter-select');
+      const classSelect = document.querySelectorAll('.filter-select')[1];
+      const dispatchButton = document.querySelector('.btn-dispatch');
+      
+      if (gradeSelect && classSelect && dispatchButton) {
+        const hasGrade = gradeSelect.value !== '';
+        const hasClass = classSelect.value !== '';
+        
+        if (hasGrade && hasClass) {
+          dispatchButton.disabled = false;
+        } else {
+          dispatchButton.disabled = true;
+        }
+      }
+    }
+
+    // 處理年級和班級選擇的邏輯
+    function handleGradeChange() {
+      const gradeSelect = document.querySelector('.filter-select');
+      const classSelect = document.querySelectorAll('.filter-select')[1];
+      const studentList = document.querySelector('.student-list');
+      
+      if (gradeSelect.value) {
+        classSelect.classList.remove('inactive');
+        classSelect.classList.add('active');
+        
+        // 根據年級自動選擇對應的第一個班級
+        const grade = gradeSelect.value;
+        let defaultClass = '';
+        
+        switch(grade) {
+          case '7':
+            defaultClass = '701';
+            break;
+          case '8':
+            defaultClass = '801';
+            break;
+          case '9':
+            defaultClass = '901';
+            break;
+        }
+        
+        if (defaultClass) {
+          classSelect.value = defaultClass;
+          classSelect.classList.remove('inactive');
+          classSelect.classList.add('active');
+          
+          // 顯示對應的學生名單
+          showStudentList();
+        }
+      } else {
+        classSelect.classList.remove('active');
+        classSelect.classList.add('inactive');
+        classSelect.value = '';
+        // 如果沒有選擇年級，顯示空狀態
+        showEmptyState();
+      }
+      
+      // 更新派測驗按鈕狀態
+      updateDispatchButtonState();
+    }
+
+    // 處理班級選擇的邏輯
+    function handleClassChange() {
+      const gradeSelect = document.querySelector('.filter-select');
+      const classSelect = document.querySelectorAll('.filter-select')[1];
+      const studentList = document.querySelector('.student-list');
+      
+      if (gradeSelect.value && classSelect.value) {
+        // 如果年級和班級都選擇了，顯示學生名單
+        showStudentList();
+      } else {
+        // 否則顯示空狀態
+        showEmptyState();
+      }
+      
+      // 更新派測驗按鈕狀態
+      updateDispatchButtonState();
+    }
+
+    // 學生數據區塊 - 只保留七年一班
+    const studentData = {
+      '701': [
+        { id: '01', name: '王小明' },
+        { id: '02', name: '李小滑' },
+        { id: '03', name: '陳小珍' },
+        { id: '04', name: '劉曉亭' },
+        { id: '05', name: '陳小剛' },
+        { id: '06', name: '張小華' },
+        { id: '07', name: '林小美' },
+        { id: '08', name: '黃小強' }
+      ]
+    };
+
+    // 生成學生名單 HTML 的函數
+    function generateStudentListHTML(students) {
+      const studentRows = students.map(student => `
+        <div class="student-row">
+          <div class="row-checkbox">
+            <input type="checkbox" id="student-${student.id}">
+            <label for="student-${student.id}"></label>
+          </div>
+          <div class="row-seat">${student.id}</div>
+          <div class="row-name">${student.name}</div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="student-table">
+          <div class="table-header">
+            <div class="header-checkbox">
+              <input type="checkbox" id="select-all">
+              <label for="select-all"></label>
+            </div>
+            <div class="header-seat">座號</div>
+            <div class="header-name">姓名</div>
+          </div>
+          <div class="table-body">
+            ${studentRows}
+          </div>
+        </div>
+      `;
+    }
+
+    // 顯示學生名單
+    function showStudentList() {
+      const studentList = document.querySelector('.student-list');
+      const gradeSelect = document.querySelector('.filter-select');
+      const classSelect = document.querySelectorAll('.filter-select')[1];
+      
+      const grade = gradeSelect.value;
+      const className = classSelect.value;
+      const classKey = className; // 例如 '701', '702' 等
+      
+      const students = studentData[classKey] || [];
+      
+      // 設置學生名單容器樣式
+      studentList.style.padding = '0';
+      studentList.style.alignItems = 'stretch';
+      studentList.style.justifyContent = 'flex-start';
+      studentList.style.maxHeight = '360px';
+      studentList.style.overflow = 'hidden';
+      
+      studentList.innerHTML = generateStudentListHTML(students);
+      
+      // 更新選擇信息
+      updateSelectionInfo(students.length);
+      
+      // 顯示選擇信息
+      showSelectionInfo();
+      
+      // 添加全選功能
+      setupSelectAllFunctionality();
+    }
+
+    // 顯示空狀態
+    function showEmptyState() {
+      const studentList = document.querySelector('.student-list');
+      studentList.style.padding = '32px';
+      studentList.style.alignItems = 'center';
+      studentList.style.justifyContent = 'center';
+      studentList.style.maxHeight = '360px';
+      studentList.style.overflow = 'hidden';
+      studentList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-illustration">
+            <img src="../asset/illustration_empty_content.svg" alt="空狀態插圖" width="120" height="90">
+          </div>
+        </div>
+        <div class="empty-text">尚無資料，請選擇年級及班級</div>
+      `;
+      
+      // 隱藏選擇信息
+      hideSelectionInfo();
+    }
+
+    // 顯示選擇信息
+    function showSelectionInfo() {
+      const selectionInfo = document.querySelector('.selection-info');
+      if (selectionInfo) {
+        selectionInfo.style.display = 'block';
+      }
+    }
+
+    // 隱藏選擇信息
+    function hideSelectionInfo() {
+      const selectionInfo = document.querySelector('.selection-info');
+      if (selectionInfo) {
+        selectionInfo.style.display = 'none';
+      }
+    }
+
+    // 更新選擇信息
+    function updateSelectionInfo(totalCount) {
+      const selectionInfo = document.querySelector('.selection-info');
+      if (selectionInfo) {
+        selectionInfo.textContent = `已選取 ${totalCount} 個 / 共 ${totalCount} 個`;
+      }
+    }
+
+    // 設置全選功能
+    function setupSelectAllFunctionality() {
+      const selectAllCheckbox = document.getElementById('select-all');
+      const studentCheckboxes = document.querySelectorAll('.row-checkbox input[type="checkbox"]');
+      
+      if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+          const isChecked = this.checked;
+          studentCheckboxes.forEach(checkbox => {
+            checkbox.checked = isChecked;
+          });
+          updateSelectionCount();
+        });
+      }
+      
+      // 為每個學生複選框添加事件
+      studentCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          updateSelectionCount();
+          updateSelectAllState();
+        });
+      });
+    }
+
+    // 更新選擇計數
+    function updateSelectionCount() {
+      const studentCheckboxes = document.querySelectorAll('.row-checkbox input[type="checkbox"]:checked');
+      const totalCheckboxes = document.querySelectorAll('.row-checkbox input[type="checkbox"]');
+      const selectionInfo = document.querySelector('.selection-info');
+      
+      if (selectionInfo) {
+        selectionInfo.textContent = `已選取 ${studentCheckboxes.length} 個 / 共 ${totalCheckboxes.length} 個`;
+      }
+    }
+
+    // 更新全選狀態
+    function updateSelectAllState() {
+      const selectAllCheckbox = document.getElementById('select-all');
+      const studentCheckboxes = document.querySelectorAll('.row-checkbox input[type="checkbox"]');
+      const checkedCheckboxes = document.querySelectorAll('.row-checkbox input[type="checkbox"]:checked');
+      
+      if (selectAllCheckbox && studentCheckboxes.length > 0) {
+        selectAllCheckbox.checked = checkedCheckboxes.length === studentCheckboxes.length;
+        selectAllCheckbox.indeterminate = checkedCheckboxes.length > 0 && checkedCheckboxes.length < studentCheckboxes.length;
+      }
+    }
+
+    // 顯示線上觀課內容
+    function showOnlineObservationContent() {
+      // 檢查線上觀課內容是否已存在
+      let onlineContent = document.getElementById('online-observation-content');
+      if (!onlineContent) {
+        onlineContent = document.createElement('div');
+        onlineContent.id = 'online-observation-content';
+        onlineContent.className = 'online-observation-content';
+        onlineContent.innerHTML = `
+          <div class="page-header">
+            <h1 class="page-title">線上觀課</h1>
+            <div class="page-filters">
+              <div class="filter-group">
+                
+                <select class="filter-select">
+                  <option>七年級</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                
+                <select class="filter-select">
+                  <option>七年一班</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-content">
+            <div class="status-cards">
+              <div class="status-card total-students">
+                <div class="card-icon">
+                  <img src="../asset/ic_user_group.svg" alt="學生總數圖標" width="24" height="24">
+                </div>
+                <div class="card-content">
+                  <div class="card-label">學生總數</div>
+                  <div class="card-value">30 人</div>
+                </div>
+              </div>
+              <div class="status-card answering">
+                <div class="card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#00A15D"/>
+                  </svg>
+                </div>
+                <div class="card-content">
+                  <div class="card-label">作答中</div>
+                  <div class="card-value">28 人</div>
+                </div>
+              </div>
+              <div class="status-card idle">
+                <div class="card-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="6" y="4" width="4" height="16" fill="#E3CE00"/>
+                    <rect x="14" y="4" width="4" height="16" fill="#E3CE00"/>
+                  </svg>
+                </div>
+                <div class="card-content">
+                  <div class="card-label">閒置中</div>
+                  <div class="card-value">2 人</div>
+                </div>
+              </div>
+              <div class="status-card needs-help">
+                <div class="card-content">
+                  <div class="card-header">
+                    <div class="card-icon">
+                      <img src="../asset/ic_alert.svg" alt="需要協助圖標" width="24" height="24">
+                    </div>
+                    <div class="card-label">需要協助</div>
+                  </div>
+                  <div class="card-value">5 人</div>
+                </div>
+              </div>
+            </div>
+            <div class="performance-cards">
+              <div class="performance-card accuracy">
+                <div class="card-content">
+                  <div class="card-info">
+                    <div class="card-label">平均正確率</div>
+                    <div class="card-description">全班目前答題的整體正確率</div>
+                  </div>
+                  <div class="card-value">85.2%</div>
+                </div>
+              </div>
+              <div class="performance-card time">
+                <div class="card-content">
+                  <div class="card-info">
+                    <div class="card-label">平均作答時間</div>
+                    <div class="card-description">整份任務的平均作答時間</div>
+                  </div>
+                  <div class="card-value">05:24</div>
+                </div>
+              </div>
+              <div class="performance-card progress">
+                <div class="card-content">
+                  <div class="card-info">
+                    <div class="card-label">班級作答進度</div>
+                    <div class="card-description">顯示全班完成人數</div>
+                  </div>
+                  <div class="card-value">0人完成</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 學生作答即時觀課區塊 -->
+          <div class="realtime-observation-section">
+            <h2 class="section-title">學生作答即時觀課</h2>
+            <div class="realtime-cards-container">
+              <!-- 動態生成的學生卡片將在這裡顯示 -->
+            </div>
+          </div>
+        `;
+        
+        // 將線上觀課內容插入到 footer 之前
+        const footer = document.querySelector('.footer');
+        if (footer) {
+          document.body.insertBefore(onlineContent, footer);
+        } else {
+          document.body.appendChild(onlineContent);
+        }
+        
+        // 初始化學生卡片
+        updateStudentCards();
+      }
+      
+      // 顯示線上觀課內容
+      onlineContent.style.display = 'block';
+      
+      // 確保 footer 顯示
+      const footer = document.querySelector('.footer');
+      if (footer) {
+        footer.style.display = 'block';
+      }
+    }
+
+    // Tab 點擊切換功能和派測驗彈窗功能
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded'); // 調試用
+      
+      // Header 導航切換功能
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(navItem => {
+        navItem.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // 檢查是否有彈窗開啟，如果有則不執行
+          const modal = document.getElementById('testModal');
+          const successModal = document.getElementById('successModal');
+          if ((modal && modal.style.display === 'flex') || (successModal && successModal.style.display === 'flex')) {
+            return;
+          }
+          
+          const navText = this.textContent.trim();
+          console.log('Nav clicked:', navText); // 調試用
+          
+          // 移除所有 nav 的 active 狀態
+          navItems.forEach(item => item.classList.remove('active'));
+          
+          // 為當前點擊的 nav 添加 active 狀態
+          this.classList.add('active');
+          
+          // 根據點擊的導航項目切換內容
+          if (navText === '我的') {
+            console.log('Switching to My page'); // 調試用
+            switchToMyPage();
+          } else if (navText === '學習') {
+            console.log('Switching to Study page'); // 調試用
+            switchToStudyPage();
+          } else if (navText === '分析') {
+            console.log('Switching to Analysis page'); // 調試用
+            switchToAnalysisPage();
+          }
+        });
+      });
+
+      // Tab 點擊切換功能
+      const tabs = document.querySelectorAll('.tab, .tab-2');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // 檢查是否有彈窗開啟，如果有則不執行
+          const modal = document.getElementById('testModal');
+          const successModal = document.getElementById('successModal');
+          if ((modal && modal.style.display === 'flex') || (successModal && successModal.style.display === 'flex')) {
+            return;
+          }
+          
+          // 移除所有 tab 的 active 狀態
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            // 移除底線
+            const rect = t.querySelector('.rectangle');
+            if (rect) rect.style.display = 'none';
+            // 重置文字顏色
+            const text = t.querySelector('.text, .text-wrapper');
+            if (text) text.style.color = '#637381';
+          });
+          
+          // 為當前點擊的 tab 添加 active 狀態
+          this.classList.add('active');
+          
+          // 添加底線
+          const rect = this.querySelector('.rectangle');
+          if (rect) rect.style.display = 'block';
+          
+          // 改變文字顏色
+          const text = this.querySelector('.text, .text-wrapper');
+          if (text) text.style.color = '#222';
+        });
+      });
+
+      // 年級切換功能
+      const gradeTabs = document.querySelectorAll('.grade-tab');
+      const gradeContents = document.querySelectorAll('.grade-content');
+      
+      gradeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // 檢查是否有彈窗開啟，如果有則不執行
+          const modal = document.getElementById('testModal');
+          if (modal && modal.style.display === 'flex') {
+            return;
+          }
+          
+          const grade = this.getAttribute('data-grade');
+          
+          // 移除所有年級 tab 的 active 狀態
+          gradeTabs.forEach(t => t.classList.remove('active'));
+          
+          // 隱藏所有年級內容
+          gradeContents.forEach(content => {
+            content.style.display = 'none';
+          });
+          
+          // 為當前點擊的 tab 添加 active 狀態
+          this.classList.add('active');
+          
+          // 顯示對應的年級內容
+          const targetContent = document.getElementById(`grade-${grade}`);
+          if (targetContent) {
+            targetContent.style.display = 'block';
+          }
+        });
+      });
+
+      // 為所有派測驗按鈕添加點擊事件
+      const testButtons = document.querySelectorAll('.action-btn[data-tooltip="派測驗"]');
+      console.log('Found test buttons:', testButtons.length); // 調試用
+      
+      testButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Test button clicked'); // 調試用
+          openTestModal();
+        });
+      });
+
+      // 為年級選擇添加事件監聽器
+      const gradeSelect = document.querySelector('.filter-select');
+      if (gradeSelect) {
+        gradeSelect.addEventListener('change', function() {
+          // 當年級有選擇時，年級選擇框變成 active 狀態
+          if (this.value) {
+            this.classList.remove('inactive');
+            this.classList.add('active');
+          } else {
+            this.classList.remove('active');
+            this.classList.add('inactive');
+          }
+          handleGradeChange();
+        });
+      }
+
+      // 為班級選擇添加事件監聽器
+      const classSelect = document.querySelectorAll('.filter-select')[1];
+      if (classSelect) {
+        classSelect.addEventListener('change', function() {
+          // 當班級有選擇時，班級選擇框變成 active 狀態
+          if (this.value) {
+            this.classList.remove('inactive');
+            this.classList.add('active');
+          } else {
+            this.classList.remove('active');
+            this.classList.add('inactive');
+          }
+          handleClassChange();
+        });
+      }
+    });
+
+    // 學生作答數據 - 簡化版本
+    const studentAnswerData = {
+      '林小美': {
+        name: '林小美',
+        status: 'answering',
+        testInfo: '測驗 | 數 - 絕對值',
+        totalQuestions: 10,
+        currentQuestion: 1,
+        answeredQuestions: 0,
+        correctAnswers: 0,
+        incorrectAnswers: 0,
+        unansweredQuestions: 0,
+        currentScore: 0,
+        questionHistory: [],
+        scoreHistory: [0, 20, 36, 52, 67, 61, 69, 76, 82, 88, 94], // 每題的分數變化
+        questionResults: ['correct', 'correct', 'correct', 'correct', 'incorrect', 'correct', 'correct', 'correct', 'correct', 'correct'], // 每題的結果
+        isAnimating: false
+      },
+      '陳小明': {
+        name: '陳小明',
+        status: 'answering',
+        testInfo: '測驗 | 數 - 絕對值',
+        totalQuestions: 5,
+        currentQuestion: 1,
+        answeredQuestions: 0,
+        correctAnswers: 0,
+        incorrectAnswers: 0,
+        unansweredQuestions: 0,
+        currentScore: 0,
+        questionHistory: [],
+        scoreHistory: [0, 5, 10, 22, 15, 12], // 每題的分數變化
+        questionResults: ['incorrect', 'incorrect', 'correct', 'incorrect', 'incorrect'], // 每題的結果
+        isAnimating: false
+      },
+      '李小華': {
+        name: '李小華',
+        status: 'answering',
+        testInfo: '測驗 | 數 - 絕對值',
+        totalQuestions: 10,
+        currentQuestion: 1,
+        answeredQuestions: 0,
+        correctAnswers: 0,
+        incorrectAnswers: 0,
+        unansweredQuestions: 0,
+        currentScore: 0,
+        questionHistory: [],
+        scoreHistory: [0, 15, 10, 26, 21, 34, 46, 41, 55, 67, 78], // 每題的分數變化
+        questionResults: ['correct', 'incorrect', 'correct', 'incorrect', 'correct', 'correct', 'incorrect', 'correct', 'correct', 'correct'], // 每題的結果
+        isAnimating: false
+      },
+      '張小倩': {
+        name: '張小倩',
+        status: 'answering',
+        testInfo: '測驗 | 數 - 絕對值',
+        totalQuestions: 10,
+        currentQuestion: 1,
+        answeredQuestions: 0,
+        correctAnswers: 0,
+        incorrectAnswers: 0,
+        unansweredQuestions: 0,
+        currentScore: 0,
+        questionHistory: [],
+        scoreHistory: [0, 15, 10, 26, 21, 34, 46, 58, 70, 81, 91], // 每題的分數變化
+        questionResults: ['correct', 'incorrect', 'correct', 'incorrect', 'correct', 'correct', 'correct', 'correct', 'correct', 'correct'], // 每題的結果
+        isAnimating: false
+      }
+    };
+
+    // 動態更新學生作答卡片
+    function updateStudentCards() {
+      const cardsContainer = document.querySelector('.realtime-cards-container');
+      if (!cardsContainer) return;
+
+      // 清空現有卡片
+      cardsContainer.innerHTML = '';
+      
+      // 為每個學生創建卡片
+      Object.values(studentAnswerData).forEach(student => {
+        const card = createStudentCard(student);
+        cardsContainer.appendChild(card);
+      });
+      
+      // 初始化狀態卡片人數
+      updateStatusCardCounts();
+      
+      // 初始化正確率卡片
+      updateAccuracyCard();
+      
+      // 初始化平均作答時間卡片
+      updateAverageTimeCard();
+      
+      // 初始化班級作答進度卡片
+      updateProgressCard();
+    }
+
+    // 創建學生作答卡片
+    function createStudentCard(student) {
+      const card = document.createElement('div');
+      card.className = `student-card ${student.status}`;
+      card.setAttribute('data-student', student.name); // 添加學生名稱屬性
+      
+      // 生成題目指示器
+      const indicators = generateQuestionIndicators(student.questionHistory);
+      
+      // 根據分數決定顏色
+      const scoreColor = getScoreColor(student.currentScore);
+      
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="student-name">${student.name}</div>
+          <div class="status-badge ${student.status}">${getStatusText(student.status)}</div>
+        </div>
+        <div class="card-content">
+          <div class="test-info">${student.testInfo}</div>
+          <div class="progress-info">已作答 ${student.answeredQuestions} 題</div>
+          <div class="question-indicators">
+            ${indicators}
+          </div>
+          <div class="score ${scoreColor}">${student.currentScore} 分</div>
+        </div>
+        <div class="card-footer">
+          <button class="btn-secondary">傳送訊息</button>
+          <button class="btn-primary">查看</button>
+        </div>
+      `;
+      
+      // 如果是林小美且還沒有開始動畫，啟動動畫
+      if (student.name === '林小美' && !student.isAnimating && student.answeredQuestions === 0) {
+        startWangXiaoMingAnimation(student);
+      }
+      
+      // 如果是陳小明且還沒有開始動畫，啟動動畫
+      if (student.name === '陳小明' && !student.isAnimating && student.answeredQuestions === 0) {
+        startChenXiaoMingAnimation(student);
+      }
+      
+      // 如果是李小華且還沒有開始動畫，啟動動畫
+      if (student.name === '李小華' && !student.isAnimating && student.answeredQuestions === 0) {
+        startLiXiaoHuaAnimation(student);
+      }
+      
+      // 如果是張小倩且還沒有開始動畫，啟動動畫
+      if (student.name === '張小倩' && !student.isAnimating && student.answeredQuestions === 0) {
+        startZhangXiaoQianAnimation(student);
+      }
+      
+      return card;
+    }
+
+    // 根據分數獲取顏色類別
+    function getScoreColor(score) {
+      if (score >= 80) {
+        return 'score-high'; // 綠色
+      } else if (score >= 60) {
+        return 'score-medium'; // 黃色
+      } else {
+        return 'score-low'; // 紅色
+      }
+    }
+
+    // 啟動林小美的動畫
+    function startWangXiaoMingAnimation(student) {
+      if (student.isAnimating) return;
+      
+      student.isAnimating = true;
+      let currentQuestion = 1;
+      
+      const animateNextQuestion = () => {
+        if (currentQuestion > student.totalQuestions) {
+          student.isAnimating = false;
+          
+          // 檢查是否完成10題且不是需要協助狀態，如果是則1分鐘後變為閒置狀態
+          if (student.answeredQuestions >= 10 && student.status !== 'needs-help') {
+            setTimeout(() => {
+              student.status = 'idle';
+              updateStudentCardStatus(student);
+            }, 60000); // 1分鐘 = 60000毫秒
+          }
+          
+          return;
+        }
+        
+        // 添加新題目到歷史記錄
+        const questionResult = student.questionResults[currentQuestion - 1];
+        student.questionHistory.push({
+          question: currentQuestion,
+          result: questionResult
+        });
+        
+        // 更新統計數據
+        student.answeredQuestions = currentQuestion;
+        if (questionResult === 'correct') {
+          student.correctAnswers++;
+        } else {
+          student.incorrectAnswers++;
+        }
+        
+        // 更新分數
+        student.currentScore = student.scoreHistory[currentQuestion];
+        
+        // 更新卡片顯示
+        updateStudentCardDisplay(student);
+        
+        currentQuestion++;
+        
+        // 5秒後繼續下一題
+        setTimeout(animateNextQuestion, 5000);
+      };
+      
+      // 延遲1秒後開始動畫，確保卡片已經完全加載
+      setTimeout(() => {
+        animateNextQuestion();
+      }, 1000);
+    }
+
+    // 啟動陳小明的動畫
+    function startChenXiaoMingAnimation(student) {
+      if (student.isAnimating) return;
+      
+      student.isAnimating = true;
+      let currentQuestion = 1;
+      
+      const animateNextQuestion = () => {
+        if (currentQuestion > student.totalQuestions) {
+          student.isAnimating = false;
+          
+          // 檢查是否完成10題且不是需要協助狀態，如果是則1分鐘後變為閒置狀態
+          if (student.answeredQuestions >= 10 && student.status !== 'needs-help') {
+            setTimeout(() => {
+              student.status = 'idle';
+              updateStudentCardStatus(student);
+            }, 60000); // 1分鐘 = 60000毫秒
+          }
+          
+          return;
+        }
+        
+        // 添加新題目到歷史記錄
+        const questionResult = student.questionResults[currentQuestion - 1];
+        student.questionHistory.push({
+          question: currentQuestion,
+          result: questionResult
+        });
+        
+        // 更新統計數據
+        student.answeredQuestions = currentQuestion;
+        if (questionResult === 'correct') {
+          student.correctAnswers++;
+        } else {
+          student.incorrectAnswers++;
+        }
+        
+        // 更新分數
+        student.currentScore = student.scoreHistory[currentQuestion];
+        
+        // 檢查是否需要協助狀態（連續5題錯誤）
+        checkNeedHelpStatus(student);
+        
+        // 更新卡片顯示
+        updateStudentCardDisplay(student);
+        
+        currentQuestion++;
+        
+        // 根據題目決定延遲時間：1-3題每3秒，4-5題每5秒
+        const delay = currentQuestion <= 3 ? 3000 : 5000;
+        setTimeout(animateNextQuestion, delay);
+      };
+      
+      // 延遲2秒後開始動畫，確保在林小美之後開始
+      setTimeout(() => {
+        animateNextQuestion();
+      }, 2000);
+    }
+
+    // 啟動李小華的動畫
+    function startLiXiaoHuaAnimation(student) {
+      if (student.isAnimating) return;
+      
+      student.isAnimating = true;
+      let currentQuestion = 1;
+      
+      const animateNextQuestion = () => {
+        if (currentQuestion > student.totalQuestions) {
+          student.isAnimating = false;
+          
+          // 檢查是否完成10題且不是需要協助狀態，如果是則1分鐘後變為閒置狀態
+          if (student.answeredQuestions >= 10 && student.status !== 'needs-help') {
+            setTimeout(() => {
+              student.status = 'idle';
+              updateStudentCardStatus(student);
+            }, 60000); // 1分鐘 = 60000毫秒
+          }
+          
+          return;
+        }
+        
+        // 添加新題目到歷史記錄
+        const questionResult = student.questionResults[currentQuestion - 1];
+        student.questionHistory.push({
+          question: currentQuestion,
+          result: questionResult
+        });
+        
+        // 更新統計數據
+        student.answeredQuestions = currentQuestion;
+        if (questionResult === 'correct') {
+          student.correctAnswers++;
+        } else {
+          student.incorrectAnswers++;
+        }
+        
+        // 更新分數
+        student.currentScore = student.scoreHistory[currentQuestion];
+        
+        // 更新卡片顯示
+        updateStudentCardDisplay(student);
+        
+        currentQuestion++;
+        
+        // 每4秒作答一題
+        setTimeout(animateNextQuestion, 4000);
+      };
+      
+      // 延遲3秒後開始動畫，確保在陳小明之後開始
+      setTimeout(() => {
+        animateNextQuestion();
+      }, 3000);
+    }
+
+    // 啟動張小倩的動畫
+    function startZhangXiaoQianAnimation(student) {
+      if (student.isAnimating) return;
+      
+      student.isAnimating = true;
+      let currentQuestion = 1;
+      
+      const animateNextQuestion = () => {
+        if (currentQuestion > student.totalQuestions) {
+          student.isAnimating = false;
+          
+          // 檢查是否完成10題且不是需要協助狀態，如果是則1分鐘後變為閒置狀態
+          if (student.answeredQuestions >= 10 && student.status !== 'needs-help') {
+            setTimeout(() => {
+              student.status = 'idle';
+              updateStudentCardStatus(student);
+            }, 60000); // 1分鐘 = 60000毫秒
+          }
+          
+          return;
+        }
+        
+        // 添加新題目到歷史記錄
+        const questionResult = student.questionResults[currentQuestion - 1];
+        student.questionHistory.push({
+          question: currentQuestion,
+          result: questionResult
+        });
+        
+        // 更新統計數據
+        student.answeredQuestions = currentQuestion;
+        if (questionResult === 'correct') {
+          student.correctAnswers++;
+        } else {
+          student.incorrectAnswers++;
+        }
+        
+        // 更新分數
+        student.currentScore = student.scoreHistory[currentQuestion];
+        
+        // 更新卡片顯示
+        updateStudentCardDisplay(student);
+        
+        currentQuestion++;
+        
+        // 每6秒作答一題
+        setTimeout(animateNextQuestion, 6000);
+      };
+      
+      // 延遲4秒後開始動畫，確保在李小華之後開始
+      setTimeout(() => {
+        animateNextQuestion();
+      }, 4000);
+    }
+
+    // 檢查是否需要協助狀態
+    function checkNeedHelpStatus(student) {
+      // 檢查前面5題的正確率是否小於等於20%
+      const recentQuestions = student.questionHistory.slice(-5);
+      if (recentQuestions.length === 5) {
+        const correctCount = recentQuestions.filter(q => q.result === 'correct').length;
+        const accuracyRate = (correctCount / 5) * 100; // 計算正確率百分比
+        
+        if (accuracyRate <= 20) {
+          student.status = 'needs-help';
+          updateStudentCardStatus(student);
+          // 添加閃爍效果
+          startBlinkingEffect(student);
+        }
+      }
+    }
+
+    // 啟動閃爍效果
+    function startBlinkingEffect(student) {
+      const cardsContainer = document.querySelector('.realtime-cards-container');
+      if (!cardsContainer) return;
+      
+      const studentCard = cardsContainer.querySelector(`[data-student="${student.name}"]`);
+      if (!studentCard) return;
+      
+      let blinkCount = 0;
+      const maxBlinks = 5;
+      
+      const blink = () => {
+        if (blinkCount >= maxBlinks) {
+          // 停止閃爍
+          studentCard.classList.remove('blinking');
+          return;
+        }
+        
+        // 添加閃爍類別
+        studentCard.classList.add('blinking');
+        
+        // 0.5秒後移除閃爍類別
+        setTimeout(() => {
+          studentCard.classList.remove('blinking');
+          blinkCount++;
+          
+          // 0.5秒後開始下一次閃爍
+          setTimeout(blink, 500);
+        }, 500);
+      };
+      
+      // 開始閃爍
+      blink();
+    }
+
+    // 獲取狀態文字
+    function getStatusText(status) {
+      switch(status) {
+        case 'answering':
+          return '正在作答';
+        case 'idle':
+          return '閒置中';
+        case 'needs-help':
+          return '需要協助';
+        default:
+          return '正在作答';
+      }
+    }
+
+    // 更新學生卡片狀態
+    function updateStudentCardStatus(student) {
+      const cardsContainer = document.querySelector('.realtime-cards-container');
+      if (!cardsContainer) return;
+      
+      const studentCard = cardsContainer.querySelector(`[data-student="${student.name}"]`);
+      if (!studentCard) return;
+      
+      // 更新卡片狀態類別
+      studentCard.className = `student-card ${student.status}`;
+      
+      // 更新狀態徽章
+      const statusBadge = studentCard.querySelector('.status-badge');
+      if (statusBadge) {
+        statusBadge.className = `status-badge ${student.status}`;
+        statusBadge.textContent = getStatusText(student.status);
+      }
+      
+      // 更新狀態卡片人數
+      updateStatusCardCounts();
+      
+      // 更新正確率卡片
+      updateAccuracyCard();
+      
+      // 更新平均作答時間卡片
+      updateAverageTimeCard();
+      
+      // 更新班級作答進度卡片
+      updateProgressCard();
+    }
+
+    // 更新學生卡片顯示
+    function updateStudentCardDisplay(student) {
+      const cardsContainer = document.querySelector('.realtime-cards-container');
+      if (!cardsContainer) return;
+      
+      const studentCard = cardsContainer.querySelector(`[data-student="${student.name}"]`);
+      if (!studentCard) return;
+      
+      // 更新進度信息
+      const progressInfo = studentCard.querySelector('.progress-info');
+      if (progressInfo) {
+        progressInfo.textContent = `已作答 ${student.answeredQuestions} 題`;
+      }
+      
+      // 更新題目指示器
+      const indicatorsContainer = studentCard.querySelector('.question-indicators');
+      if (indicatorsContainer) {
+        indicatorsContainer.innerHTML = generateQuestionIndicators(student.questionHistory);
+      }
+      
+      // 更新分數和顏色
+      const scoreElement = studentCard.querySelector('.score');
+      if (scoreElement) {
+        // 移除舊的顏色類別
+        scoreElement.classList.remove('score-high', 'score-medium', 'score-low');
+        // 添加新的顏色類別
+        const scoreColor = getScoreColor(student.currentScore);
+        scoreElement.classList.add(scoreColor);
+        scoreElement.textContent = `${student.currentScore} 分`;
+      }
+      
+      // 更新狀態卡片人數
+      updateStatusCardCounts();
+      
+      // 更新正確率卡片
+      updateAccuracyCard();
+      
+      // 更新平均作答時間卡片
+      updateAverageTimeCard();
+      
+      // 更新班級作答進度卡片
+      updateProgressCard();
+    }
+
+    // 生成題目指示器（顯示所有題目）
+    function generateQuestionIndicators(questionHistory) {
+      // 顯示所有題目，不限制數量
+      return questionHistory.map(q => {
+        const indicatorClass = q.result === 'correct' ? 'correct' : 
+                             q.result === 'incorrect' ? 'incorrect' : 'unanswered';
+        return `<div class="indicator ${indicatorClass}">${q.question}</div>`;
+      }).join('');
+    }
+
+    // 更新狀態卡片人數
+    function updateStatusCardCounts() {
+      const statusCards = document.querySelectorAll('.status-card');
+      if (!statusCards.length) return;
+      
+      // 計算各狀態的人數
+      let answeringCount = 0;
+      let idleCount = 0;
+      let needsHelpCount = 0;
+      
+      Object.values(studentAnswerData).forEach(student => {
+        switch(student.status) {
+          case 'answering':
+            answeringCount++;
+            break;
+          case 'idle':
+            idleCount++;
+            break;
+          case 'needs-help':
+            needsHelpCount++;
+            break;
+        }
+      });
+      
+      // 更新作答中卡片
+      const answeringCard = document.querySelector('.status-card.answering .card-value');
+      if (answeringCard) {
+        answeringCard.textContent = `${answeringCount} 人`;
+      }
+      
+      // 更新閒置中卡片
+      const idleCard = document.querySelector('.status-card.idle .card-value');
+      if (idleCard) {
+        idleCard.textContent = `${idleCount} 人`;
+      }
+      
+      // 更新需要協助卡片
+      const needsHelpCard = document.querySelector('.status-card.needs-help .card-value');
+      if (needsHelpCard) {
+        needsHelpCard.textContent = `${needsHelpCount} 人`;
+      }
+    }
+
+    // 更新正確率卡片
+    function updateAccuracyCard() {
+      const accuracyCard = document.querySelector('.performance-card.accuracy');
+      const accuracyValue = document.querySelector('.performance-card.accuracy .card-value');
+      if (!accuracyCard || !accuracyValue) return;
+      
+      // 計算總答對題數和總作答題數
+      let totalCorrect = 0;
+      let totalAnswered = 0;
+      
+      Object.values(studentAnswerData).forEach(student => {
+        totalCorrect += student.correctAnswers;
+        totalAnswered += student.answeredQuestions;
+      });
+      
+      // 計算正確率
+      let accuracyPercentage = 0;
+      if (totalAnswered > 0) {
+        accuracyPercentage = Math.round((totalCorrect / totalAnswered) * 100);
+      }
+      
+      // 移除舊的顏色類別
+      accuracyCard.classList.remove('accuracy-high', 'accuracy-medium', 'accuracy-low');
+      accuracyValue.classList.remove('accuracy-high', 'accuracy-medium', 'accuracy-low');
+      
+      // 根據正確率添加顏色類別
+      if (accuracyPercentage >= 80) {
+        accuracyCard.classList.add('accuracy-high');
+        accuracyValue.classList.add('accuracy-high');
+      } else if (accuracyPercentage >= 60) {
+        accuracyCard.classList.add('accuracy-medium');
+        accuracyValue.classList.add('accuracy-medium');
+      } else {
+        accuracyCard.classList.add('accuracy-low');
+        accuracyValue.classList.add('accuracy-low');
+      }
+      
+      // 更新正確率顯示
+      accuracyValue.textContent = `${accuracyPercentage}%`;
+    }
+
+    // 更新平均作答時間卡片
+    function updateAverageTimeCard() {
+      const timeCard = document.querySelector('.performance-card.time .card-value');
+      if (!timeCard) return;
+      
+      // 計算完成作答的學生
+      const completedStudents = Object.values(studentAnswerData).filter(student => 
+        student.answeredQuestions >= student.totalQuestions
+      );
+      
+      if (completedStudents.length === 0) {
+        timeCard.textContent = '--';
+        return;
+      }
+      
+      // 計算每個完成學生的作答時間（秒）
+      const studentTimes = completedStudents.map(student => {
+        // 根據學生名稱分配不同的作答時間
+        const timeMap = {
+          '林小美': 45, // 45秒完成10題
+          '陳小明': 25, // 25秒完成5題
+          '李小華': 40, // 40秒完成10題
+          '張小倩': 60  // 60秒完成10題
+        };
+        return timeMap[student.name] || 30;
+      });
+      
+      // 計算平均時間
+      const totalTime = studentTimes.reduce((sum, time) => sum + time, 0);
+      const averageTime = Math.round(totalTime / completedStudents.length);
+      
+      // 格式化時間顯示（分:秒）
+      const minutes = Math.floor(averageTime / 60);
+      const seconds = averageTime % 60;
+      const timeDisplay = minutes > 0 ? `${minutes}:${seconds.toString().padStart(2, '0')}` : `${seconds}秒`;
+      
+      timeCard.textContent = timeDisplay;
+    }
+
+    // 更新班級作答進度卡片
+    function updateProgressCard() {
+      const progressCard = document.querySelector('.performance-card.progress .card-value');
+      if (!progressCard) return;
+      
+      // 計算完成作答的學生數量
+      const completedStudents = Object.values(studentAnswerData).filter(student => 
+        student.answeredQuestions >= student.totalQuestions
+      );
+      
+      // 計算總學生數
+      const totalStudents = Object.keys(studentAnswerData).length;
+      
+      // 更新進度顯示
+      if (completedStudents.length === 0) {
+        progressCard.textContent = '0人完成';
+      } else {
+        progressCard.textContent = `${completedStudents.length}人完成`;
+      }
+    }
+
+
+
+    // 題目切換功能
+    let currentQuestionIndex = {
+      'practicing': 1,
+      'familiar': 1,
+      'basic': 1
+    };
+
+    function showNextQuestion(level) {
+      const currentIndex = currentQuestionIndex[level];
+      const nextIndex = currentIndex + 1;
+      const maxQuestions = getMaxQuestions(level);
+      
+      if (nextIndex <= maxQuestions) {
+        // 隱藏當前題目
+        const currentQuestion = document.getElementById(`${level}-question-${currentIndex}`);
+        if (currentQuestion) {
+          currentQuestion.style.display = 'none';
+        }
+        
+        // 顯示下一題
+        const nextQuestion = document.getElementById(`${level}-question-${nextIndex}`);
+        if (nextQuestion) {
+          nextQuestion.style.display = 'block';
+        }
+        
+        // 更新當前題目索引
+        currentQuestionIndex[level] = nextIndex;
+        
+        // 更新按鈕狀態
+        updateNavigationButtons(level);
+      }
+    }
+
+    function showPreviousQuestion(level) {
+      const currentIndex = currentQuestionIndex[level];
+      const prevIndex = currentIndex - 1;
+      
+      if (prevIndex >= 1) {
+        // 隱藏當前題目
+        const currentQuestion = document.getElementById(`${level}-question-${currentIndex}`);
+        if (currentQuestion) {
+          currentQuestion.style.display = 'none';
+        }
+        
+        // 顯示上一題
+        const prevQuestion = document.getElementById(`${level}-question-${prevIndex}`);
+        if (prevQuestion) {
+          prevQuestion.style.display = 'block';
+        }
+        
+        // 更新當前題目索引
+        currentQuestionIndex[level] = prevIndex;
+        
+        // 更新按鈕狀態
+        updateNavigationButtons(level);
+      }
+    }
+
+    function getMaxQuestions(level) {
+      const questionCounts = {
+        'practicing': 2,
+        'familiar': 2,
+        'basic': 1
+      };
+      return questionCounts[level] || 1;
+    }
+
+    function updateNavigationButtons(level) {
+      const currentIndex = currentQuestionIndex[level];
+      const maxQuestions = getMaxQuestions(level);
+      
+      // 找到對應的導航按鈕
+      const questionSection = document.querySelector(`#${level}-question-1`).closest('.question-section');
+      const prevBtn = questionSection.querySelector('.nav-btn.prev');
+      const nextBtn = questionSection.querySelector('.nav-btn.next');
+      
+      // 更新按鈕狀態
+      if (prevBtn) {
+        prevBtn.disabled = currentIndex <= 1;
+        prevBtn.style.opacity = currentIndex <= 1 ? '0.5' : '1';
+      }
+      
+      if (nextBtn) {
+        nextBtn.disabled = currentIndex >= maxQuestions;
+        nextBtn.style.opacity = currentIndex >= maxQuestions ? '0.5' : '1';
+      }
+    }
+  </script>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="copyright">© NANI BOOK ENTERPRISE CO., LTD. All Rights Reserved.</div>
+      <div class="version">v1.0.0</div>
+    </div>
+  </footer>
+</body>
+</html> 
